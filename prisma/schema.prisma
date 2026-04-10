@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Admin {
+  id       String @id @default(cuid())
+  email    String @unique
+  password String
+}
+
+model Gift {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  image       String?
+  price       Float
+  status      String    @default("AVAILABLE")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  payments    Payment[]
+}
+
+model Payment {
+  id                 String   @id @default(cuid())
+  mp_id              String?  @unique
+  giftId             String
+  status             String
+  amount             Float
+  payer_email        String?
+  qr_code            String?
+  qr_code_base64     String?
+  external_reference String   @unique
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  gift               Gift     @relation(fields: [giftId], references: [id])
+}

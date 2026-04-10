@@ -1,66 +1,111 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+
+import { useEffect, useState } from 'react';
+import Navbar from '@/components/Navbar';
+import GiftCard from '@/components/GiftCard';
+import { Gift } from '@prisma/client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart } from 'lucide-react';
 
 export default function Home() {
+  const [gifts, setGifts] = useState<Gift[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchGifts = async () => {
+    try {
+      const response = await fetch('/api/gifts');
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      setGifts(data);
+    } catch (error) {
+      console.error('Error fetching gifts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGifts();
+    
+    // Polling every 5 seconds to update gift status (Real-time update)
+    const interval = setInterval(() => {
+      fetchGifts();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
+    <main>
+      <Navbar />
+      
+      {/* Hero Section */}
+      <section className="hero container animate-fade">
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <img 
+            src="/hero.png" 
+            alt="Nossa Casa" 
+            style={{ 
+              width: '100%', 
+              maxHeight: '400px', 
+              objectFit: 'cover', 
+              borderRadius: '30px', 
+              marginBottom: '3rem',
+              boxShadow: 'var(--shadow)'
+            }} 
+          />
+          <Heart size={48} color="var(--accent)" style={{ marginBottom: '1.5rem' }} />
+          <h1 className="serif">Nossa Casa Nova</h1>
           <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+            Estamos muito felizes em compartilhar esse momento com você! 
+            Se desejar nos presentear, escolha um item abaixo. 
+            Todas as contribuições nos ajudarão a construir nosso novo lar.
           </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        </motion.div>
+      </section>
+
+      {/* Gifts Gallery */}
+      <section className="container" style={{ paddingBottom: '8rem' }}>
+        <h2 className="serif" style={{ textAlign: 'center', fontSize: '2.5rem', marginBottom: '3rem' }}>Lista de Presentes</h2>
+        
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '4rem' }}>Carregando presentes...</div>
+        ) : (
+          <div className="gifts-grid">
+            <AnimatePresence>
+              {gifts.map((gift) => (
+                <GiftCard 
+                  key={gift.id} 
+                  gift={gift} 
+                  onSuccess={fetchGifts} 
+                />
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+
+        {gifts.length === 0 && !loading && (
+          <div className="glass" style={{ textAlign: 'center', padding: '4rem', maxWidth: '600px', margin: '0 auto' }}>
+            <p className="serif" style={{ fontSize: '1.2rem' }}>Ainda estamos preparando os itens. Volte em breve!</p>
+          </div>
+        )}
+      </section>
+
+      {/* Footer */}
+      <footer style={{ 
+        textAlign: 'center', 
+        padding: '4rem 0', 
+        background: 'var(--primary-light)', 
+        color: 'var(--primary)',
+        marginTop: '4rem'
+      }}>
+        <p className="serif" style={{ fontSize: '1.5rem', fontWeight: '700' }}>Com carinho,</p>
+        <p style={{ marginTop: '0.5rem' }}>Obrigado por fazer parte desse sonho!</p>
+      </footer>
+    </main>
   );
 }
