@@ -10,6 +10,7 @@ export async function GET() {
     });
     return NextResponse.json(gifts);
   } catch (error) {
+    console.error('Error fetching gifts:', error);
     return NextResponse.json({ error: 'Failed to fetch gifts' }, { status: 500 });
   }
 }
@@ -35,6 +36,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(gift);
   } catch (error) {
+    console.error('Error creating gift:', error);
     return NextResponse.json({ error: 'Failed to create gift' }, { status: 500 });
   }
 }
@@ -57,6 +59,7 @@ export async function DELETE(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error('Error deleting gift:', error);
     return NextResponse.json({ error: 'Failed to delete gift' }, { status: 500 });
   }
 }
