@@ -38,5 +38,5 @@ model Payment {
   external_reference String   @unique
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
-  gift               Gift     @relation(fields: [giftId], references: [id])
+  gift               Gift     @relation(fields: [giftId], references: [id], onDelete: Cascade)
 }

@@ -53,6 +53,12 @@ export async function DELETE(req: Request) {
 
     if (!id) return NextResponse.json({ error: 'Id required' }, { status: 400 });
 
+    // First, delete all related payments to avoid foreign key constraint errors
+    await prisma.payment.deleteMany({
+      where: { giftId: id },
+    });
+
+    // Then delete the gift
     await prisma.gift.delete({
       where: { id },
     });

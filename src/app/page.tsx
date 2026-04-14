@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import Navbar from '@/components/Navbar';
 import GiftCard from '@/components/GiftCard';
+import HeroCarousel from '@/components/HeroCarousel';
+import PhotoGallery from '@/components/PhotoGallery';
 import { Gift } from '@prisma/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Heart } from 'lucide-react';
@@ -46,18 +48,7 @@ export default function Home() {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <img 
-            src="/hero.png" 
-            alt="Nossa Casa" 
-            style={{ 
-              width: '100%', 
-              maxHeight: '400px', 
-              objectFit: 'cover', 
-              borderRadius: '30px', 
-              marginBottom: '3rem',
-              boxShadow: 'var(--shadow)'
-            }} 
-          />
+          <HeroCarousel />
           <Heart size={48} color="var(--accent)" style={{ marginBottom: '1.5rem' }} />
           <h1 className="serif">Nossa Casa Nova</h1>
           <p>
@@ -67,6 +58,8 @@ export default function Home() {
           </p>
         </motion.div>
       </section>
+
+      <PhotoGallery />
 
       {/* Gifts Gallery */}
       <section className="container" style={{ paddingBottom: '8rem' }}>
