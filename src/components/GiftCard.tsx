@@ -55,16 +55,21 @@ export default function GiftCard({ gift, onSuccess }: GiftCardProps) {
       className={`glass overflow-hidden flex flex-col h-full ${isBought ? 'opacity-75 grayscale' : ''}`}
       style={{ padding: '0', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
-      <div style={{ position: 'relative', height: '200px', width: '100%' }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '4 / 3', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         {gift.image ? (
           <img 
             src={gift.image} 
             alt={gift.name} 
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            style={{ 
+              maxWidth: '100%', 
+              maxHeight: '100%', 
+              objectFit: 'contain',
+              padding: '1rem'
+            }}
           />
         ) : (
-          <div style={{ width: '100%', height: '100%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            No image
+          <div style={{ width: '100%', height: '100%', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>
+            Sem imagem
           </div>
         )}
         {isBought && (

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Playfair+Display:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Cinzel:wght@400;700&display=swap');
 
 :root {
   --primary: #5c6e58;
@@ -7,7 +7,7 @@
   --accent: #bc6c25;
   --background: #fefae0;
   --foreground: #283618;
-  --glass: rgba(255, 255, 255, 0.7);
+  --glass: rgba(255, 255, 255, 0.98);
   --glass-border: rgba(255, 255, 255, 0.3);
   --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
 }
@@ -27,7 +27,8 @@ body {
 }
 
 h1, h2, h3, .serif {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
 }
 
 .container {
@@ -143,8 +144,8 @@ h1, h2, h3, .serif {
 
 .swal-glass {
   background: var(--glass) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border: 1px solid var(--glass-border) !important;
   border-radius: 24px !important;
   box-shadow: var(--shadow) !important;
@@ -156,4 +157,9 @@ h1, h2, h3, .serif {
 
 .swal-actions-gap {
   gap: 1rem;
+}
+
+.swal2-backdrop-show {
+  background: rgba(40, 54, 24, 0.6) !important; /* Um fundo mais escuro para cobrir os itens */
+  backdrop-filter: blur(4px);
 }
