@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
@@ -187,7 +187,7 @@ export default function HeroCarousel() {
         </svg>
       </div>
 
-      <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '100%', display: 'flex', justifyAround: 'space-around', alignItems: 'center', padding: '0 2rem', perspective: '1000px' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '1200px', height: '100%', display: 'flex', justifyContent: 'space-around', alignItems: 'center', padding: '0 2rem', perspective: '1000px' }}>
         {images.map((img, i) => (
           <div
             key={i}
@@ -218,3 +218,4 @@ export default function HeroCarousel() {
     </div>
   );
 }
+

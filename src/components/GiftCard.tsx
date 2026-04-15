@@ -22,13 +22,10 @@ export default function GiftCard({ gift, onSuccess }: GiftCardProps) {
     if (e) e.preventDefault();
     setLoading(true);
     try {
-      // Garantir que o valor seja enviado corretamente
       const bodyPayload = {
         giftId: gift.id,
         email: 'anonimo@nossacasanova.com.br'
       };
-
-      console.log('Sending checkout request with payload:', bodyPayload);
 
       const response = await fetch('/api/checkout/pix', {
         method: 'POST',
@@ -181,7 +178,7 @@ export default function GiftCard({ gift, onSuccess }: GiftCardProps) {
                   </div>
                 ) : (
                   <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                    <CreditCardForm gift={gift} onSuccess={onSuccess} onCancel={() => setPaymentMethod(null)} />
+                    <CreditCardForm giftId={gift.id} amount={gift.price} onSuccess={onSuccess} />
                   </div>
                 )
               ) : (
@@ -200,7 +197,7 @@ export default function GiftCard({ gift, onSuccess }: GiftCardProps) {
                 </div>
               )}
             </div>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
