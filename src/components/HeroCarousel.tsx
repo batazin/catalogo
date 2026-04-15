@@ -119,7 +119,7 @@ export default function HeroCarousel() {
         >
           {/* Path alinhado matematicamente com o topo dos prendedores (95px nas pontas, 155px no centro) */}
           <path 
-            d="M-50,95 C350,95 500,155 720,155 C940,155 1090,95 1490,95" 
+            d="M-100,95 C350,95 500,155 720,155 C940,155 1090,95 1540,95" 
             fill="none" 
             stroke="#dcc499" 
             strokeWidth="4" 
@@ -128,7 +128,7 @@ export default function HeroCarousel() {
           />
           {/* Sombra da corda */}
           <path 
-            d="M-50,100 C350,100 500,160 720,160 C940,160 1090,100 1490,100" 
+            d="M-100,100 C350,100 500,160 720,160 C940,160 1090,100 1540,100" 
             fill="none" 
             stroke="rgba(0,0,0,0.05)" 
             strokeWidth="3.5" 

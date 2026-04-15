@@ -34,3 +34,43 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+---
+
+## Variáveis de Ambiente
+
+As configurações sensíveis do projeto ficam em dois lugares:
+
+### 1. Desenvolvimento Local (`.env`)
+
+Edite o arquivo `.env` na raiz do projeto com as suas chaves:
+
+```env
+DATABASE_URL="..."
+DIRECT_URL="..."
+
+# Mercado Pago
+MP_ACCESS_TOKEN=SEU_ACCESS_TOKEN_AQUI
+MP_PUBLIC_KEY=SUA_PUBLIC_KEY_AQUI
+NEXT_PUBLIC_MP_PUBLIC_KEY=SUA_PUBLIC_KEY_AQUI
+MP_CLIENT_ID=SEU_CLIENT_ID_AQUI
+MP_CLIENT_SECRET=SEU_CLIENT_SECRET_AQUI
+
+# Auth
+NEXTAUTH_SECRET=...
+NEXTAUTH_URL=http://localhost:3000
+ADMIN_EMAIL=...
+ADMIN_PASSWORD=...
+```
+
+> ⚠️ Após alterar o `.env`, reinicie o servidor com `npm run dev` para carregar os novos valores.
+
+### 2. Produção (Netlify)
+
+Para atualizar as variáveis no site publicado:
+
+1. Acesse o [Netlify Dashboard](https://app.netlify.com/) e abra o seu site.
+2. Vá em **Site configuration → Environment variables**.
+3. Adicione ou edite as mesmas variáveis acima (principalmente as do Mercado Pago).
+4. Após salvar, faça um novo **Deploy** para que o site carregue as chaves novas.
+

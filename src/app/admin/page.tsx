@@ -20,6 +20,8 @@ export default function AdminPage() {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const [fileName, setFileName] = useState('');
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -62,6 +64,7 @@ export default function AdminPage() {
       // Reset file input
       const fileInput = document.getElementById('image-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
+      setFileName('');
       
       fetchGifts();
       showToast('Presente adicionado com sucesso!');
@@ -132,27 +135,81 @@ export default function AdminPage() {
                 onChange={e => setPrice(e.target.value)}
                 style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd' }}
               />
-              <input 
-                id="image-input"
-                type="file"
-                accept="image/*"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
+              <div 
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={async (e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith('image/')) {
+                    setFileName(file.name);
                     const reader = new FileReader();
-                    reader.onloadend = () => {
-                      setImage(reader.result as string);
-                    };
+                    reader.onloadend = () => setImage(reader.result as string);
                     reader.readAsDataURL(file);
                   }
                 }}
-                style={{ padding: '0.8rem', borderRadius: '8px', border: '1px solid #ddd', background: 'white' }}
-              />
-              {image && (
-                <div style={{ position: 'relative', width: '100px', height: '100px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd' }}>
-                  <img src={image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-              )}
+                style={{ 
+                  position: 'relative',
+                  border: `2px dashed ${isDragging ? 'var(--primary)' : '#ddd'}`,
+                  borderRadius: '12px',
+                  padding: '1.5rem',
+                  textAlign: 'center',
+                  background: isDragging ? 'var(--primary-light)' : 'white',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '10px'
+                }}
+              >
+                <input 
+                  id="image-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setFileName(file.name);
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setImage(reader.result as string);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer' }}
+                />
+                
+                {image ? (
+                  <div style={{ position: 'relative', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '80px', height: '80px', borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                      <img src={image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--primary)', fontWeight: '600', maxWidth: '100%', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {fileName || 'Imagem selecionada'}
+                    </span>
+                    <button 
+                      type="button" 
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); setImage(''); setFileName(''); }}
+                      style={{ fontSize: '0.7rem', color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600' }}
+                    >
+                      Remover
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ background: 'var(--primary-light)', padding: '10px', borderRadius: '50%', color: 'var(--primary)' }}>
+                      <ImageIcon size={24} />
+                    </div>
+                    <div>
+                      <p style={{ margin: 0, fontSize: '0.9rem', fontWeight: '600', color: 'var(--foreground)' }}>Clique para fazer upload</p>
+                      <p style={{ margin: 0, fontSize: '0.75rem', color: '#888' }}>ou arraste e solte a imagem aqui</p>
+                    </div>
+                  </>
+                )}
+              </div>
               <button disabled={adding} type="submit" className="btn btn-primary">
                 {adding ? <Loader2 className="animate-spin" /> : 'Cadastrar Presente'}
               </button>

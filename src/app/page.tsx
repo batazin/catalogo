@@ -42,21 +42,24 @@ export default function Home() {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="hero container animate-fade">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <HeroCarousel />
-          <Heart size={48} color="var(--accent)" style={{ marginBottom: '1.5rem' }} />
-          <h1 className="serif">Nossa Casa Nova</h1>
-          <p>
-            Estamos muito felizes em compartilhar esse momento com você! 
-            Se desejar nos presentear, escolha um item abaixo. 
-            Todas as contribuições nos ajudarão a construir nosso novo lar.
-          </p>
-        </motion.div>
+      <section className="hero animate-fade">
+        <HeroCarousel />
+        
+        <div className="container">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            <Heart size={48} color="var(--accent)" style={{ marginBottom: '1.5rem' }} />
+            <h1 className="serif">Nossa Casa Nova</h1>
+            <p>
+              Estamos muito felizes em compartilhar esse momento com você! 
+              Se desejar nos presentear, escolha um item abaixo. 
+              Todas as contribuições nos ajudarão a construir nosso novo lar.
+            </p>
+          </motion.div>
+        </div>
       </section>
 
       <PhotoGallery />
