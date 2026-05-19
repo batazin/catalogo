@@ -12,9 +12,13 @@ export async function GET() {
     });
     console.log(`[API Gifts] Found ${gifts.length} gifts`);
     return NextResponse.json(gifts);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching gifts:', error);
-    return NextResponse.json({ error: 'Failed to fetch gifts' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Failed to fetch gifts', 
+      details: error.message,
+      code: error.code 
+    }, { status: 500 });
   }
 }
 
