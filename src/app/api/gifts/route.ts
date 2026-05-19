@@ -3,11 +3,14 @@ import { prisma } from '@/lib/prisma';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const gifts = await prisma.gift.findMany({
       orderBy: { createdAt: 'desc' },
     });
+    console.log(`[API Gifts] Found ${gifts.length} gifts`);
     return NextResponse.json(gifts);
   } catch (error) {
     console.error('Error fetching gifts:', error);

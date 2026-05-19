@@ -8,6 +8,9 @@ async function main() {
   try {
     const gifts = await prisma.gift.findMany()
     console.log('Success! Found gifts:', gifts.length)
+    if (gifts.length > 0) {
+      console.log('Sample Gift:', gifts[0].name)
+    }
   } catch (error) {
     console.error('Prisma Error:', error)
   } finally {
