@@ -4,21 +4,27 @@ import { prisma } from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  const rawDbUrl = process.env.DATABASE_URL || 'Missing';
+  const debugInfo = {
+    length: rawDbUrl.length,
+    startsWith: rawDbUrl.substring(0, 15),
+    protocol: rawDbUrl.includes(':') ? rawDbUrl.split(':')[0] : 'no-colon',
+    firstChar: rawDbUrl.length > 0 ? rawDbUrl.charCodeAt(0) : 'none',
+    nodeEnv: process.env.NODE_ENV,
+  };
+
   try {
     const count = await prisma.gift.count();
-    const dbUrl = process.env.DATABASE_URL ? (process.env.DATABASE_URL.split('@')[1] || 'URL exists but no @') : 'Missing';
-    
     return NextResponse.json({
       status: 'success',
       count,
-      dbHost: dbUrl,
-      nodeEnv: process.env.NODE_ENV,
+      debug: debugInfo
     });
   } catch (error: any) {
     return NextResponse.json({
       status: 'error',
       message: error.message,
-      stack: error.stack,
+      debug: debugInfo,
     }, { status: 500 });
   }
 }
