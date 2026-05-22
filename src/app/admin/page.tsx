@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
-import { Plus, Trash2, Loader2, Image as ImageIcon } from "lucide-react";
+import { Plus, Trash2, Loader2, Image as ImageIcon, Edit2, X } from "lucide-react";
 import { Gift } from "@prisma/client";
 import { showAlert, showConfirm, showToast } from "@/lib/swal";
 
@@ -14,6 +14,7 @@ export default function AdminPage() {
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   // Form State
   const [name, setName] = useState('');
@@ -49,30 +50,50 @@ export default function AdminPage() {
     e.preventDefault();
     setAdding(true);
     try {
+      const isEditing = !!editingId;
       const response = await fetch('/api/gifts', {
-        method: 'POST',
+        method: isEditing ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, price, image }),
+        body: JSON.stringify({ id: editingId, name, description, price, image }),
       });
       
-      if (!response.ok) throw new Error('Failed to create gift');
+      if (!response.ok) throw new Error(isEditing ? 'Failed to update' : 'Failed to create gift');
 
       setName('');
       setDescription('');
       setPrice('');
       setImage('');
+      setEditingId(null);
       // Reset file input
       const fileInput = document.getElementById('image-input') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
       setFileName('');
       
       fetchGifts();
-      showToast('Presente adicionado com sucesso!');
+      showToast(isEditing ? 'Atualizado com sucesso!' : 'Presente adicionado com sucesso!');
     } catch (error) {
-      showAlert('Erro', 'Não foi possível adicionar o presente', 'error');
+      showAlert('Erro', 'Não foi possível salvar', 'error');
     } finally {
       setAdding(false);
     }
+  };
+
+  const handleEditGift = (gift: Gift) => {
+    setName(gift.name);
+    setDescription(gift.description || '');
+    setPrice(gift.price.toString());
+    setImage(gift.image || '');
+    setEditingId(gift.id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const cancelEdit = () => {
+    setName('');
+    setDescription('');
+    setPrice('');
+    setImage('');
+    setEditingId(null);
+    setFileName('');
   };
 
   const handleDelete = async (id: string) => {
@@ -108,9 +129,17 @@ export default function AdminPage() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '3rem' }}>
           {/* Add Gift Form */}
           <div className="glass" style={{ padding: '2rem', height: 'fit-content' }}>
-            <h2 className="serif" style={{ fontSize: '1.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Plus size={20} /> Novo Item
-            </h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h2 className="serif" style={{ fontSize: '1.5rem', margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                {editingId ? <Edit2 size={20} /> : <Plus size={20} />} 
+                {editingId ? 'Editar Item' : 'Novo Item'}
+              </h2>
+              {editingId && (
+                <button type="button" onClick={cancelEdit} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.9rem', fontWeight: 'bold' }}>
+                  <X size={16} /> Cancelar
+                </button>
+              )}
+            </div>
             <form onSubmit={handleAddGift} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <input 
                 placeholder="Nome do presente" 
@@ -211,7 +240,7 @@ export default function AdminPage() {
                 )}
               </div>
               <button disabled={adding} type="submit" className="btn btn-primary">
-                {adding ? <Loader2 className="animate-spin" /> : 'Cadastrar Presente'}
+                {adding ? <Loader2 className="animate-spin" /> : (editingId ? 'Atualizar Presente' : 'Cadastrar Presente')}
               </button>
             </form>
           </div>
@@ -250,7 +279,10 @@ export default function AdminPage() {
                     }}>
                       {gift.status}
                     </span>
-                    <button onClick={() => handleDelete(gift.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>
+                    <button onClick={() => handleEditGift(gift)} style={{ background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer' }} title="Editar">
+                      <Edit2 size={20} />
+                    </button>
+                    <button onClick={() => handleDelete(gift.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }} title="Excluir">
                       <Trash2 size={20} />
                     </button>
                   </div>

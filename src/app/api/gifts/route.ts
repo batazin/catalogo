@@ -48,6 +48,37 @@ export async function POST(req: Request) {
   }
 }
 
+export async function PUT(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  try {
+    const body = await req.json();
+    const { id, name, description, image, price } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing gift ID' }, { status: 400 });
+    }
+
+    const gift = await prisma.gift.update({
+      where: { id },
+      data: {
+        name,
+        description,
+        image,
+        price: parseFloat(price),
+      },
+    });
+
+    return NextResponse.json(gift);
+  } catch (error) {
+    console.error('Error updating gift:', error);
+    return NextResponse.json({ error: 'Failed to update gift' }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session) {
