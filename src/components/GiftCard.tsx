@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Gift } from '@prisma/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Loader2, QrCode, CreditCard as CardIcon, X, Copy, ArrowLeft } from 'lucide-react';
@@ -221,7 +222,13 @@ export default function GiftCard({ gift, onSuccess }: GiftCardProps) {
       >
         <div style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
           {gift.image ? (
-            <img src={gift.image} alt={gift.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', padding: '1.5rem' }} />
+            <Image 
+              src={gift.image} 
+              alt={gift.name} 
+              fill
+              sizes="(max-width: 768px) 100vw, 300px"
+              style={{ objectFit: 'contain', padding: '1.5rem' }}
+            />
           ) : (
             <div style={{ width: '100%', height: '100%', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9ca3af' }}>Sem imagem</div>
           )}
