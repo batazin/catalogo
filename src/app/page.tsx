@@ -28,13 +28,6 @@ export default function Home() {
 
   useEffect(() => {
     fetchGifts();
-    
-    // Polling every 5 seconds to update gift status (Real-time update)
-    const interval = setInterval(() => {
-      fetchGifts();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
   return (
